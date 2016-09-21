@@ -1,11 +1,11 @@
-# Pokemon-Go-Rocket-API
+# RocketBot
 
 ## Official discord channel for user and developer discussions.
 * https://discord.gg/y6EU2qY
 
 ## Window
-![alt tag](https://github.com/theunknowngentleman/rocketbot/blob/master/Main.jpg)  
-![alt tag](https://github.com/theunknowngentleman/rocketbot/blob/master/Settings.jpg)
+![alt tag](https://raw.githubusercontent.com/TheUnknownGentlemen/RocketBot/master/Main.jpg)  
+![alt tag](https://raw.githubusercontent.com/TheUnknownGentlemen/RocketBot/master/Settings.jpg)
 
 
 A Pokémon Go bot in C#
