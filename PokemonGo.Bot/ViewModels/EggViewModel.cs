@@ -29,8 +29,8 @@ namespace PokemonGo.Bot.ViewModels
         }
 
         public bool IsInIncubator => !string.IsNullOrEmpty(IncubatorId);
-        public bool IsInUnlimitedIncubator => IsInIncubator && IncubatorId.Contains('-');
-        public bool IsInNormalIncubator => IsInIncubator && !IncubatorId.Contains('-');
+        public bool IsInUnlimitedIncubator => IsInIncubator && (GetIncubator()?.IsUnlimited).GetValueOrDefault();
+        public bool IsInNormalIncubator => IsInIncubator && !IsInUnlimitedIncubator;
 
         double kmWalked;
 
@@ -44,6 +44,7 @@ namespace PokemonGo.Bot.ViewModels
         public double KmTarget { get; }
 
         public ObservableCollection<EggIncubatorViewModel> EggIncubators { get; }
+        EggIncubatorViewModel GetIncubator() => EggIncubators.SingleOrDefault(i => i.Id == IncubatorId);
 
         public EggViewModel(PokemonData pokemon, ObservableCollection<EggIncubatorViewModel> eggIncubators, float playerKmWalked, Settings settings) : base(pokemon, settings)
         {
