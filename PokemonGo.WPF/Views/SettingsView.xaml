@@ -46,6 +46,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Label Content="Default Latitude" Grid.Row="0" Grid.Column="0" Height="25"/>
         <TextBox Text="{Binding DefaultLatitude}" Grid.Row="0" Grid.Column="1" Height="25"/>
@@ -83,6 +84,8 @@
         <TextBox Text="{Binding MinPotions}" Grid.Row="16" Grid.Column="1" Height="25"/>
         <Label Content="Minimum number of Berries" Grid.Row="17" Grid.Column="0" Height="25"/>
         <TextBox Text="{Binding MinBerries}" Grid.Row="17" Grid.Column="1" Height="25"/>
-        <Button Content="Save" Command="{Binding Save}" Grid.Row="18" Grid.Column="1" Height="25"/>
+        <Label Content="Maximum number of retries for server calls" Grid.Row="18" Grid.Column="0" Height="25"/>
+        <TextBox Text="{Binding MaxRetries}" Grid.Row="18" Grid.Column="1" Height="25"/>
+        <Button Content="Save" Command="{Binding Save}" Grid.Row="19" Grid.Column="1" Height="25"/>
     </Grid>
 </UserControl>

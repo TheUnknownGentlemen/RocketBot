@@ -62,7 +62,8 @@ namespace PokemonGo.Bot.ViewModels
             {
                 loginProvider = new PtcLoginProvider(main.Settings.Username, main.Settings.Password);
                 session = await POGOLib.Net.Authentication.Login.GetSession(loginProvider, main.Player.Position.Latitude, main.Player.Position.Longitude);
-                IsLoggedIn = await session.Startup();
+                await StartSession();
+
                 main.Settings.UpdateWith(session.GlobalSettings);
                 var templates = await DownloadItemTemplates();
                 main.Settings.UpdateWith(templates);
@@ -79,6 +80,29 @@ namespace PokemonGo.Bot.ViewModels
                 MessengerInstance.Send(new Message(Colors.Green, "Login successfull."));
             else
                 MessengerInstance.Send(new Message(Colors.Red, "Login unsuccessfull."));
+        }
+
+        private async Task StartSession()
+        {
+            var retryCount = 0;
+            var exceptionString = "";
+            while (retryCount < main.Settings.MaxRetries)
+            {
+                try
+                {
+                    IsLoggedIn = await session.Startup();
+                    return;
+                }
+                catch (Exception e)
+                {
+                    retryCount++;
+                    exceptionString = e.ToString();
+                    MessengerInstance.Send(new Message(Colors.Yellow, $"Retrying ({retryCount}/{main.Settings.MaxRetries})"));
+                }
+            }
+
+            // no succes, throw an exception
+            MessengerInstance.Send(new Message(Colors.Red, exceptionString));
         }
 
         bool CanExecuteLogin() => !IsLoggedIn;
@@ -148,22 +172,32 @@ namespace PokemonGo.Bot.ViewModels
             where TResult : IMessage<TResult>, new()
             where TMessage : IMessage<TMessage>
         {
-            try
+            var retryCount = 0;
+            var exceptionString = "";
+            while (retryCount < main.Settings.MaxRetries)
             {
-                var response = await session.RpcClient.SendRemoteProcedureCall(new Request
+                try
                 {
-                    RequestType = type,
-                    RequestMessage = message.ToByteString()
-                });
+                    var response = await session.RpcClient.SendRemoteProcedureCall(new Request
+                    {
+                        RequestType = type,
+                        RequestMessage = message.ToByteString()
+                    });
 
-                var parser = new MessageParser<TResult>(() => new TResult());
-                return parser.ParseFrom(response);
+                    var parser = new MessageParser<TResult>(() => new TResult());
+                    return parser.ParseFrom(response);
+                }
+                catch (Exception e)
+                {
+                    retryCount++;
+                    exceptionString = e.ToString();
+                    MessengerInstance.Send(new Message(Colors.Yellow, $"Retrying ({retryCount}/{main.Settings.MaxRetries})"));
+                }
             }
-            catch(Exception e)
-            {
-                MessengerInstance.Send(new Message(Colors.Red, e.ToString()));
-                return default(TResult);
-            }
+
+            // no succes, throw an exception
+            MessengerInstance.Send(new Message(Colors.Red, exceptionString));
+            return default(TResult);
         }
 
         Task<DownloadItemTemplatesResponse> DownloadItemTemplates()

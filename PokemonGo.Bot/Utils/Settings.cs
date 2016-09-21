@@ -57,6 +57,7 @@ namespace PokemonGo.Bot.Utils
         public int MinPokeballs { get; set; }
         public int MinPotions { get; set; }
         public int MinBerries { get; set; }
+        public int MaxRetries { get; set; }
 
         MapSettings map;
 
