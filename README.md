@@ -4,66 +4,35 @@
 * https://discord.gg/y6EU2qY
 
 ## Window
-![alt tag](https://github.com/1461748123/Pokemon-Go-Rocket-API/blob/master/MainWindow.png)  
-![alt tag](https://github.com/1461748123/Pokemon-Go-Rocket-API/blob/master/MainSettings2.png)
+![alt tag](https://github.com/theunknowngentleman/rocketbot/blob/master/Main.jpg)  
+![alt tag](https://github.com/theunknowngentleman/rocketbot/blob/master/Settings.jpg)
 
 
 A Pokémon Go bot in C#
 
 ## Features
-* PTC / Google Login
+* PTC / Google Login (Google Login is currently unavailable due to API incompatibility)
 * Get Map Objects and Inventory
-* Live map showing Pokéstops and farming path
-* Search for Gyms / Pokéstops / Spawns
+* Live map showing Pokéstops, Gyms, Pokemon and farming path
 * Farm Pokéstops
 * Farm all Pokémon in the neighbourhood
-* Evolve Pokémon
-* Transfer Pokémon
-* Powerup Pokémon
-* Force unban
-* Use LuckyEgg
-* Auto-Recycle uneeded items
+* Auto-Recycle uneeded items while keeping wanted items
 * View all Pokémon CP/IV %
 * Transfer/Powerup/Evolve Pokémon
 * Output level and needed XP for levelup
-* Output Username, Level, Stardust, XP/hour, Pokémon/hour in Console Title
-* Automatic use of Razzberries
-* Automatic Update checker
-* Logs everything into Logs folder
+* Output Username, Level, Stardust, XP/hour, Pokémon/hour
+* Automatic use of Razzberries (currently unavailable due to API incompatibility)
 
 ## Getting Started
 ### Download
-Download the bot from the [release](https://github.com/1461748123/Pokemon-Go-Rocket-API/releases) tab.  
-If you want the latest Beta-Build, you have to download the build from the Beta-Build branch and compile them by yourself with VisualStudio 2015.   
-**Waning: Beta-Builds are unstable and might cause damage to your account, use at your own risk**
-### Login
-There are problems with google oauth login, so we have to use account and password to login for now.  
-To ensure your account's safety, we suggest you to creat an app password just for botting. This will also allows users with 2-fact-auth enable to use the bot.  
-Tutorial on how to use app password: [Google support](https://support.google.com/mail/answer/185833?hl=en)
+Download the bot from the [release](https://github.com/theunknowngentleman/rocketbot/releases) tab.
+Or clone the repository and compile it yourself for the newest bugfixes and improvements.
 ### Settings
-Change your settings using the settings tab on the bot. If you want more advance settings, edit the settings file under the bot's folder.
+Change your settings using the settings dialog on the bot.
 ### Wola
-Click Start Bot and enjoy!
+Click Login and enjoy!
 
 # Settings
-## AuthType
-* *google* - Google login
-* *ptc* - Pokémon Trainer Club
-
-## PtcUsername
-* *username* - for PTC account. No need for when using Google.
-
-## PtcPassword
-* *password* - for PTC account. No need for when using Google.
-
-## Email
-* *email@gmail.com* - for Google account. No need for when using PTC.
-
-## Password
-* *password* - for Google account. No need for when using PTC.
-
-## GoogleRefreshToken
-* *token* - for Google account. No need for wen using PTC. (Obsolete)
 
 ## DefaultLatitude
 * *12.345678* - Latitude of your location you want to use the bot in. Number between -90 and +90. Doesn't matter how many numbers stand after the comma.
@@ -71,55 +40,59 @@ Click Start Bot and enjoy!
 ## DefaultLongitude
 * *123.456789* - Longitude of your location you want to use the bot in. Number between -180 and +180. Doesn't matter how many numbers stand after the comma.
 
-## LevelOutput
-* *time* - Every X amount of time it prints the current level and experience needed for the next level.
-* *levelup* - Only outputs the level and needed experience for next level on levelup.
+## DefaultAltitude
+* *123.456789* - Altitute of your location you want to use the bot in. Set it to something beween 9 and 10 for most locations.
 
-## LevelTimeInterval
-* *seconds* - After X seconds it will print the current level and experience needed for levelup when using *time* mode.
+## AuthType
+* *Google* - Google login
+* *Ptc* - Pokémon Trainer Club
 
-## Recycler
-* *false* - Recycler not active.
-* *true* - Recycler active.
+## Username
+* *username* - Your username or google mail.
 
-## RecycleItemsInterval
-* *seconds* - After X seconds it recycles items from the filter in *Settings.cs*.
-
-## Language
-* *english* - Outputs caught Pokémon in english name.
-* *german*  - Outputs caught Pokémon in german name.
-
-## RazzBerryMode
-* *cp* - Use RazzBerry when Pokémon is over specific CP.
-* *probability* - Use RazzBerry when Pokémon catch chance is under a specific percentage.
-
-## RazzBerrySetting
-* *cp value* - If RazzBerryMode is cp. Use RazzBerry when Pokémon is over this value
-* *probability value* - If RazzBerryMode is probability. Use Razzberry when % of catching is under this value. Between 0 and 1.
+## Password
+* *password* - Your password. It is stored in plain text, so make sure your computer is save.
 
 ## TransferType
+Favorited Pokemon are never transfered!
 * *none* - disables transferring
-* *cp* - transfers all Pokémon below the CP threshold in the app.config, EXCEPT for those types specified in program.cs in TransferAllWeakPokemon
-* *leaveStrongest* - transfers all but the highest CP Pokémon of each type SPECIFIED IN program.cs in TransferAllButStrongestUnwantedPokemon (those that aren't specified are untouched)
-* *duplicate* - same as above but for all Pokémon (no need to specify type), (will not transfer favorited Pokémon)
+* *cp* - transfers all Pokémon below the CP threshold
+* *duplicate* - Only keeps the one Pokemon of each type with the highest CP.
+* *IVDuplicate* - Only keeps the one Pokemon of each type with the highest IV.
+* *IVDuplicateUnderCPThreshold* - Only keeps the one Pokemon of each type with the highest IV and keeps all Pokemon above the IV and CP threshold. - Recomended
 * *all* - transfers all Pokémon
 
-## TransferCPThreshold
-* *CP* - transfers all Pokémon with less CP than this value.
+## Do not transfer Pokemon above CP
+* *CP* - Pokemon above this value will not be transfered.
 
-## TransferIVThreshold
-* *IV* - transfers all Pokémon with less IV than this value. Between 0 and 1.
+## Do not transfer Pokemon above IV
+* *IV* - Pokemon above this value will not be transfered.
 
-## TravelSpeed
-* *Speed* - Travel speed in km/h
+## Use razzberry when Pokemon is above CP
+* *CP* - When you encounter a Pokemon above this value a razzberry will be used.
 
-## ImageSize
-* *px* - Pixel size for Pokémon Thumbnails
+## Use razzberry when catch probability is below
+* *probability* - When you encounter a Pokemon below this value a razzberry will be used.
 
-## CatchPokemon
-* *true* - Catch Pokémon and get Items from PokéStops
-* *false* - Don't catch Pokémon and get Items from PokéStops
+## Minimum TravelSpeed
+* *Speed* - Minimum Travel speed in km/h. Each time you move somewhere your speed is randomized between min and max.
 
-## EvolveAllGivenPokemons
-* *false* - Evolves no Pokémon.
-* *true* - Evolves all Pokémon.
+## Maximum TravelSpeed
+* *Speed* - Maximum Travel speed in km/h
+
+## Auto Inventory management
+* *yes/no* Enables or disables automatic inventory management. Whenever you have only 10 item slots left, items will be recycled so you have 30 item slots left.
+           First potions (from worst to best) are recycled, then berries (also those berries that are not implemented yet), then Revive (first Revive, then max Revive), then Pokeballs (from worst to best).
+		   This makes sure that you always have the minimum number of items specified and the best for each category.
+
+## Minimum number of Revive
+* *number* Auto Inventory management will keep at least this number of Revive/max Revive
+
+## Minimum number of Pokeballs
+* *number* Auto Inventory management will keep at least this number of Pokeballs/Great Balls/Ultra Balls/Master Balls
+
+## Minimum number of Potions
+* *number* Auto Inventory management will keep at least this number of Potion/Super Potion/Hyper Potion/Max Potion
+
+## Minimum number of Berries
+* *number* Auto Inventory management will keep at least this number of Razzberry/Blukberry/Nanaberry/Pinapberry/Weparberry
