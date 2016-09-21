@@ -158,8 +158,11 @@ namespace PokemonGo.Bot.ViewModels
         readonly SessionViewModel session;
 
         double GetRandomTravelSpeed() => random.NextDouble() * (maxSpeedInmetersPerMillisecond - minSpeedInmetersPerMillisecond) + minSpeedInmetersPerMillisecond;
+        Guid currentMoveAction;
         async Task MoveToAsync(Position3DViewModel newPosition)
         {
+            var id = Guid.NewGuid();
+            currentMoveAction = id;
             var waitTime = Position.DistanceTo(newPosition) / GetRandomTravelSpeed();
             var startTime = DateTime.Now;
             var targetTime = startTime.AddMilliseconds(waitTime);
@@ -171,11 +174,15 @@ namespace PokemonGo.Bot.ViewModels
             {
                 var msTraveled = (now - startTime).TotalMilliseconds;
                 var currentPosition = startPosition + (targetVector * (msTraveled / waitTime));
+                if (id != currentMoveAction)
+                    return;
                 Position = currentPosition;
                 await Task.Delay(100);
 
                 now = DateTime.Now;
             }
+            if (id != currentMoveAction)
+                return;
             Position = newPosition;
         }
 
