@@ -83,7 +83,6 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <m:Map CredentialsProvider="AhX1gtSfkGHg8FKEthaxWJHqCNLWVmY5MVO1bBMdNQTYOyqyYrC6FEWaVArrH0oK" Mode="Road" Center="{Binding Player.Position, Converter={StaticResource positionToLocationConverter}, Mode=OneTime}" ZoomLevel="16" Loaded="Map_Loaded">
             <m:MapPolyline Stroke="Blue" StrokeThickness="5" Locations="{Binding Bot.CurrentAction.Route, Converter={StaticResource positionToLocationConverter}}" Opacity="0.5"/>
@@ -108,6 +107,5 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </m:Map>
-        <Button Content="Reload Map" Command="{Binding Session.GetMapObjects}" Grid.Row="1"/>
     </Grid>
 </UserControl>
