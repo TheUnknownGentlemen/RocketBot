@@ -25,7 +25,7 @@ A Pokémon Go bot in C#
 
 ## Getting Started
 ### Download
-Download the bot from the [release](https://github.com/theunknowngentleman/rocketbot/releases) tab.
+Download the bot from the [release](https://github.com/TheUnknownGentlemen/RocketBot/releases) tab.
 Or clone the repository and compile it yourself for the newest bugfixes and improvements.
 ### Settings
 Change your settings using the settings dialog on the bot.
