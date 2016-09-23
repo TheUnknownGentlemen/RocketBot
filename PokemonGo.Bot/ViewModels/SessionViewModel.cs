@@ -84,14 +84,21 @@ namespace PokemonGo.Bot.ViewModels
 
         private async Task StartSession()
         {
+            IsLoggedIn = await Retry(session.Startup);
+        }
+
+        async Task<T> Retry<T>(Func<Task<T>> action)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
             var retryCount = 0;
             var exceptionString = "";
             while (retryCount < main.Settings.MaxRetries)
             {
                 try
                 {
-                    IsLoggedIn = await session.Startup();
-                    return;
+                    return await action();
                 }
                 catch (Exception e)
                 {
@@ -103,6 +110,7 @@ namespace PokemonGo.Bot.ViewModels
 
             // no succes, throw an exception
             MessengerInstance.Send(new Message(Colors.Red, exceptionString));
+            return default(T);
         }
 
         bool CanExecuteLogin() => !IsLoggedIn;
@@ -168,36 +176,21 @@ namespace PokemonGo.Bot.ViewModels
         internal Task<UseItemEggIncubatorResponse> UseItemEggIncubator(string incubatorId, ulong eggId)
             => CallServer<UseItemEggIncubatorMessage, UseItemEggIncubatorResponse>(RequestType.UseItemEggIncubator, new UseItemEggIncubatorMessage { ItemId = incubatorId, PokemonId = eggId });
 
-        async Task<TResult> CallServer<TMessage, TResult>(RequestType type, TMessage message)
+        Task<TResult> CallServer<TMessage, TResult>(RequestType type, TMessage message)
             where TResult : IMessage<TResult>, new()
             where TMessage : IMessage<TMessage>
         {
-            var retryCount = 0;
-            var exceptionString = "";
-            while (retryCount < main.Settings.MaxRetries)
+            return Retry(async () =>
             {
-                try
+                var response = await session.RpcClient.SendRemoteProcedureCall(new Request
                 {
-                    var response = await session.RpcClient.SendRemoteProcedureCall(new Request
-                    {
-                        RequestType = type,
-                        RequestMessage = message.ToByteString()
-                    });
+                    RequestType = type,
+                    RequestMessage = message.ToByteString()
+                });
 
-                    var parser = new MessageParser<TResult>(() => new TResult());
-                    return parser.ParseFrom(response);
-                }
-                catch (Exception e)
-                {
-                    retryCount++;
-                    exceptionString = e.ToString();
-                    MessengerInstance.Send(new Message(Colors.Yellow, $"Retrying ({retryCount}/{main.Settings.MaxRetries})"));
-                }
-            }
-
-            // no succes, throw an exception
-            MessengerInstance.Send(new Message(Colors.Red, exceptionString));
-            return default(TResult);
+                var parser = new MessageParser<TResult>(() => new TResult());
+                return parser.ParseFrom(response);
+            });
         }
 
         Task<DownloadItemTemplatesResponse> DownloadItemTemplates()

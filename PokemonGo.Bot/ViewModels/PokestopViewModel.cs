@@ -29,7 +29,7 @@ namespace PokemonGo.Bot.ViewModels
         public bool IsNear
         {
             get { return isNear; }
-            set { if (IsNear != value) { isNear = value; RaisePropertyChanged(); } }
+            set { if (IsNear != value) { isNear = value; RaisePropertyChanged(); Search.RaiseCanExecuteChanged(); } }
         }
 
         bool hasLureModuleActive;
