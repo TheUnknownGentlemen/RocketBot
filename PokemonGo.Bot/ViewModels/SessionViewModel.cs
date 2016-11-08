@@ -13,6 +13,7 @@ using PokemonGo.Bot.Utils;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace PokemonGo.Bot.ViewModels
 {
@@ -40,6 +41,7 @@ namespace PokemonGo.Bot.ViewModels
         #region Login
 
         AsyncRelayCommand login;
+        private readonly Dispatcher dispatcher;
 
         public AsyncRelayCommand Login
         {
@@ -84,7 +86,7 @@ namespace PokemonGo.Bot.ViewModels
 
         private async Task StartSession()
         {
-            IsLoggedIn = await Retry(session.Startup);
+            IsLoggedIn = await Retry(session.StartupAsync);
         }
 
         async Task<T> Retry<T>(Func<Task<T>> action)
@@ -121,11 +123,15 @@ namespace PokemonGo.Bot.ViewModels
         public SessionViewModel(MainViewModel main)
         {
             this.main = main;
+            dispatcher = Dispatcher.CurrentDispatcher;
         }
         async void Inventory_Update(object sender, EventArgs e)
         {
-            await main.Player.Inventory.UpdateWith(session.Player.Inventory.InventoryItems);
-            main.Player.UpdateWith(session.Player.Data);
+            await dispatcher.InvokeAsync(async () =>
+            {
+                await main.Player.Inventory.UpdateWith(session.Player.Inventory.InventoryItems);
+                main.Player.UpdateWith(session.Player.Data);
+            });
         }
 
         void Map_Update(object sender, EventArgs e)
@@ -182,7 +188,7 @@ namespace PokemonGo.Bot.ViewModels
         {
             return Retry(async () =>
             {
-                var response = await session.RpcClient.SendRemoteProcedureCall(new Request
+                var response = await session.RpcClient.SendRemoteProcedureCallAsync(new Request
                 {
                     RequestType = type,
                     RequestMessage = message.ToByteString()

@@ -105,6 +105,8 @@ namespace PokemonGo.Bot.Utils
 
         internal void UpdateWith(GlobalSettings globalSettings)
         {
+            if (globalSettings == null)
+                return;
             if(globalSettings.FortSettings != null)
                 Fort = new PokemonGo.Bot.Utils.FortSettings(globalSettings.FortSettings);
             if (globalSettings.InventorySettings != null)

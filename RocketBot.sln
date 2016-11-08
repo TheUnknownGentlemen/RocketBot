@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonGo.Bot", "PokemonGo.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonGo.WPF", "PokemonGo.WPF\PokemonGo.WPF.csproj", "{6397D8A2-7A3E-4B35-862E-21BBA74827C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POGOLib", "POGOLib\src\POGOLib\POGOLib.csproj", "{CD4C6557-8A33-40D9-952B-A10694D3F042}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,18 +41,6 @@ Global
 		{6397D8A2-7A3E-4B35-862E-21BBA74827C4}.Release|x64.Build.0 = Release|Any CPU
 		{6397D8A2-7A3E-4B35-862E-21BBA74827C4}.Release|x86.ActiveCfg = Release|Any CPU
 		{6397D8A2-7A3E-4B35-862E-21BBA74827C4}.Release|x86.Build.0 = Release|Any CPU
-		{CD4C6557-8A33-40D9-952B-A10694D3F042}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CD4C6557-8A33-40D9-952B-A10694D3F042}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CD4C6557-8A33-40D9-952B-A10694D3F042}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{CD4C6557-8A33-40D9-952B-A10694D3F042}.Debug|x64.Build.0 = Debug|Any CPU
-		{CD4C6557-8A33-40D9-952B-A10694D3F042}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{CD4C6557-8A33-40D9-952B-A10694D3F042}.Debug|x86.Build.0 = Debug|Any CPU
-		{CD4C6557-8A33-40D9-952B-A10694D3F042}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CD4C6557-8A33-40D9-952B-A10694D3F042}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CD4C6557-8A33-40D9-952B-A10694D3F042}.Release|x64.ActiveCfg = Release|Any CPU
-		{CD4C6557-8A33-40D9-952B-A10694D3F042}.Release|x64.Build.0 = Release|Any CPU
-		{CD4C6557-8A33-40D9-952B-A10694D3F042}.Release|x86.ActiveCfg = Release|Any CPU
-		{CD4C6557-8A33-40D9-952B-A10694D3F042}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
