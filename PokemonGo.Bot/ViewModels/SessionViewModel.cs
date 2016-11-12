@@ -1,9 +1,8 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Google.Protobuf;
-using POGOLib.Net;
-using POGOLib.Net.Authentication.Providers;
-using POGOLib.Pokemon;
+using POGOLib.Official.LoginProviders;
+using POGOLib.Official.Net;
 using POGOProtos.Inventory.Item;
 using POGOProtos.Networking.Requests;
 using POGOProtos.Networking.Requests.Messages;
@@ -21,7 +20,7 @@ namespace PokemonGo.Bot.ViewModels
     {
         readonly MainViewModel main;
         Session session;
-        PtcLoginProvider loginProvider;
+        ILoginProvider loginProvider;
 
         bool isLoggedIn;
 
@@ -59,13 +58,15 @@ namespace PokemonGo.Bot.ViewModels
             MessengerInstance.Send(new Message("Logging in"));
 
             if (main.Settings.AuthType == AuthType.Google)
-                MessengerInstance.Send(new Message(Colors.Red, "Google Login is not supported at the moment."));
+                loginProvider = new GoogleLoginProvider(main.Settings.Username, main.Settings.Password);
             else
-            {
                 loginProvider = new PtcLoginProvider(main.Settings.Username, main.Settings.Password);
-                session = await POGOLib.Net.Authentication.Login.GetSession(loginProvider, main.Player.Position.Latitude, main.Player.Position.Longitude);
-                await StartSession();
 
+            session = await POGOLib.Official.Net.Authentication.Login.GetSession(loginProvider, main.Player.Position.Latitude, main.Player.Position.Longitude);
+            await StartSession();
+
+            if (IsLoggedIn)
+            {
                 main.Settings.UpdateWith(session.GlobalSettings);
                 var templates = await DownloadItemTemplates();
                 main.Settings.UpdateWith(templates);
@@ -76,10 +77,9 @@ namespace PokemonGo.Bot.ViewModels
                 session.Player.Inventory.Update += Inventory_Update;
                 Map_Update(null, null);
                 Inventory_Update(null, null);
-            }
 
-            if (IsLoggedIn)
                 MessengerInstance.Send(new Message(Colors.Green, "Login successfull."));
+            }
             else
                 MessengerInstance.Send(new Message(Colors.Red, "Login unsuccessfull."));
         }
@@ -113,6 +113,41 @@ namespace PokemonGo.Bot.ViewModels
             // no succes, throw an exception
             MessengerInstance.Send(new Message(Colors.Red, exceptionString));
             return default(T);
+        }
+
+        async Task<bool> Retry(Func<Task<bool>> action)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            var retryCount = 0;
+            var exceptionString = "";
+            var result = false;
+            while (retryCount < main.Settings.MaxRetries)
+            {
+                try
+                {
+                    result = await action();
+                }
+                catch (Exception e)
+                {
+                    retryCount++;
+                    exceptionString = e.ToString();
+                    MessengerInstance.Send(new Message(Colors.Yellow, $"Retrying ({retryCount}/{main.Settings.MaxRetries})"));
+                }
+                if (result)
+                    return true;
+                else
+                {
+                    retryCount++;
+                    exceptionString = "Request was unsuccessful.";
+                    MessengerInstance.Send(new Message(Colors.Yellow, $"Retrying ({retryCount}/{main.Settings.MaxRetries})"));
+                }
+            }
+
+            // no succes, throw an exception
+            MessengerInstance.Send(new Message(Colors.Red, exceptionString));
+            return false;
         }
 
         bool CanExecuteLogin() => !IsLoggedIn;
